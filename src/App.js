@@ -1,27 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
+import PostItem from "./Components/PostItem";
+import './styles/App.css'
 
 function App() {
 
-  let i = 0;
-
-  function Plus() {
-    i += 1
-    console.log(i)
-  }
-
-  function Minus() {
-    i -= 1
-    console.log(i)
-  }
+  const [posts,setPosts] = useState([
+    {id: 1, title: 'PHP', body: 'DH'},
+    {id: 2, title: 'Js', body: 'Hs'}
+  ]);
 
   return (
     <div className="App">
-      <h1>{i}</h1>
-      <button onClick={In}>Plus</button>
-      <button onClick={() => { i -= 1 }}>Minus</button>
-
+      {posts.map(post =>
+        <PostItem post = {post}/>)} 
     </div>
   );
 }
 
-export default App;
+export default App;   
