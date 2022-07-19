@@ -6,7 +6,7 @@ const PostList = (props) => {
         <div>
             <h2 style={{ textAlign: 'center' }}>{props.title}</h2>
             {props.posts.map((post, index) =>
-                <PostItem number={index + 1} post={post} />)}
+                <PostItem number={index + 1} post={post} key={post.id} />)}
         </div>
     )
 }
