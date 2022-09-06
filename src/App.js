@@ -2,43 +2,53 @@ import React, { useState } from "react";
 import Govno from "./Components/Govno";
 import PostItem from "./Components/PostItem";
 import PostList from "./Components/PostList";
-import MyButton from "./Components/UI/button/MyButton";
-import MyInput from "./Components/UI/input/MyInput";
 import './styles/App.css'
+import MyButton from "./Components/UI/buttons/MyButton";
+import MyInput from "./Components/UI/input/MyInput";
+import PostForm from "./Components/PostForm";
+import MySelect from "./Components/UI/select/MySelect";
 
 function App() {
 
-  const [posts,setPosts] = useState([
-    {id: 1, title: 'PHP', body: 'DH'},
-    {id: 2, title: 'Js', body: 'Hs'}
+  const [posts, setPosts] = useState([
+    { id: 1, title: 'PHP', body: 'DH' },
+    { id: 2, title: 'Js', body: 'Hs' }
   ]);
+  const [selectedSort, setSelectedSort] = useState()
 
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost])
+  }
 
-  const addNewPost = (e) =>{
-    e.preventDefault();
-    const newPost = {
-      id: Date.now(),
-      title,
-      body,
-    }
+  const removePost = (post) => {
+    setPosts(posts.filter(p => p.id !== post.id))
+  }
 
-    setPosts([...posts, newPost]);
+  const sortPosts = (sort) => {
+    setSelectedSort(sort)
+    setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
   }
 
   return (
     <div className="App">
-      <form>
-        <MyInput value = {title} onChange = {e => setTitle(e.target.value)} type="text" placeholder="Название"/>
-        <MyInput value = {body} onChange = {e => setBody(e.target.value)} type="text" placeholder="Описание"/>
-        <MyButton onClick = {addNewPost}>Создать пост</MyButton>
-      </form>
+      <PostForm create={createPost} />
 
-      <PostList posts = {posts} title = 'Список бичей'/>
-      <div className="container">
+      <hr />
 
-      </div>
+      <MySelect
+        defaultOpt="Sort by"
+        value={selectedSort}
+        onChange={sortPosts}
+        opts={[
+          { value: 'title', name: 'title' },
+          { value: 'body', name: 'body' }
+        ]}
+      />
+
+      {posts.length !== 0
+        ? <PostList remove={removePost} title='List' posts={posts} />
+        : <h1 style={{ textAlign: 'center' }}>Not Found</h1>
+      }
     </div>
   );
 }
