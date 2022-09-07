@@ -3,7 +3,7 @@ import Govno from "./Components/Govno";
 import PostItem from "./Components/PostItem";
 import PostList from "./Components/PostList";
 import './styles/App.css'
-import MyButton from "./Components/UI/buttons/MyButton";
+import MyButton from "./Components/UI/button/MyButton";
 import MyInput from "./Components/UI/input/MyInput";
 import PostForm from "./Components/PostForm";
 import MySelect from "./Components/UI/select/MySelect";
@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <PostForm create={createPost} />
 
-      <hr />
+      <hr style={{margin: '15px 0px'}}/>
 
       <MySelect
         defaultOpt="Sort by"
