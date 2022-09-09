@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Govno from "./Components/Govno";
 import PostItem from "./Components/PostItem";
 import PostList from "./Components/PostList";
@@ -10,6 +10,7 @@ import MySelect from "./Components/UI/select/MySelect";
 import PostFilter from "./Components/PostFilter";
 import MyModal from "./Components/UI/MyModal/MyModal";
 import { usePosts } from "./hooks/usePosts";
+import axios from "axios";
 
 function App() {
 
@@ -22,6 +23,16 @@ function App() {
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query)
 
+  async function fetchPosts(){
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    console.log(response.data)
+    setPosts(response.data)
+  }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
@@ -33,6 +44,7 @@ function App() {
 
   return (
     <div className="App">
+      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{marginTop: 30}} onClick={()=> setModal(true)}>
         Создать пост
       </MyButton>

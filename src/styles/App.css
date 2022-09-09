@@ -22,6 +22,10 @@
     border: 2px solid teal;
 }
 
+.post:last-child{
+    margin-bottom: 30px;
+}
+
 .remove-btn {
     margin-right: 0.5rem;
   }
