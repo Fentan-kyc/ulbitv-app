@@ -11,6 +11,7 @@ import PostFilter from "./Components/PostFilter";
 import MyModal from "./Components/UI/MyModal/MyModal";
 import { usePosts } from "./hooks/usePosts";
 import axios from "axios";
+import PostService from "./API/PostService";
 
 function App() {
 
@@ -24,9 +25,8 @@ function App() {
   const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query)
 
   async function fetchPosts(){
-    const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
-    console.log(response.data)
-    setPosts(response.data)
+    const posts = await PostService.getAll();
+    setPosts(posts)
   }
 
   useEffect(() => {
