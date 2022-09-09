@@ -12,6 +12,7 @@ import MyModal from "./Components/UI/MyModal/MyModal";
 import { usePosts } from "./hooks/usePosts";
 import axios from "axios";
 import PostService from "./API/PostService";
+import Loader from "./Components/UI/Loader/Loader";
 
 function App() {
 
@@ -22,11 +23,16 @@ function App() {
 
   const [filter, setFilter] = useState({sort: '', query: ''});
   const [modal, setModal] = useState(false);
-  const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query)
+  const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
 
   async function fetchPosts(){
-    const posts = await PostService.getAll();
+    setIsPostsLoading(true);
+    setTimeout( async ()=>{
+      const posts = await PostService.getAll();
     setPosts(posts)
+    setIsPostsLoading(false);
+    }, 5000)
   }
 
   useEffect(() => {
@@ -59,7 +65,13 @@ function App() {
         filter={filter}
         setFilter={setFilter}
       />
-        <PostList remove={removePost} title='List' posts={sortedAndSearchedPosts} />
+      {isPostsLoading
+
+      ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><Loader/></div>
+      : <PostList remove={removePost} title='List' posts={sortedAndSearchedPosts} />
+
+      }
+        
     </div>
   );
 }
