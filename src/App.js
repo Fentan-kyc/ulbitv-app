@@ -14,6 +14,7 @@ import axios from "axios";
 import PostService from "./API/PostService";
 import Loader from "./Components/UI/Loader/Loader";
 import { useFetching } from "./hooks/useFething";
+import { getPageCount, getPagesArray } from "./utils/pages";
 
 function App() {
 
@@ -25,14 +26,26 @@ function App() {
   const [filter, setFilter] = useState({sort: '', query: ''});
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query);
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPages] = useState(1);
+
+
+  let pagesArray = getPagesArray(totalPages);
+
+  console.log(pagesArray);
+
   const [fetchPosts, isPostsLoading, postError] = useFetching(async ()=>{
-    const posts = await PostService.getAll();
-    setPosts(posts)
+    const responce = await PostService.getAll(limit, page);
+    setPosts(responce.data)
+    const totalCount = responce.headers['x-total-count'];
+    setTotalPages(getPageCount(totalCount, limit))
   })
+
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [page]);
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
@@ -41,6 +54,10 @@ function App() {
 
   const removePost = (post) => {
     setPosts(posts.filter(p => p.id !== post.id))
+  }
+
+  const changePage = (page) => {
+    setPages(page);
   }
 
   return (
@@ -71,6 +88,14 @@ function App() {
       : <PostList remove={removePost} title='List' posts={sortedAndSearchedPosts} />
 
       }
+
+      <div className="page__wrapper">
+        {pagesArray.map(p => 
+          <span key={p} onClick={() => changePage(p)} className={page === p ? 'page page__current' : 'page'}>{p}</span>
+        )}
+      </div>
+
+      
         
     </div>
   );
