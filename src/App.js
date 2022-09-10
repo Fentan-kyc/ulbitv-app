@@ -13,6 +13,7 @@ import { usePosts } from "./hooks/usePosts";
 import axios from "axios";
 import PostService from "./API/PostService";
 import Loader from "./Components/UI/Loader/Loader";
+import { useFetching } from "./hooks/useFething";
 
 function App() {
 
@@ -24,16 +25,10 @@ function App() {
   const [filter, setFilter] = useState({sort: '', query: ''});
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sortm, filter.query);
-  const [isPostsLoading, setIsPostsLoading] = useState(false);
-
-  async function fetchPosts(){
-    setIsPostsLoading(true);
-    setTimeout( async ()=>{
-      const posts = await PostService.getAll();
+  const [fetchPosts, isPostsLoading, postError] = useFetching(async ()=>{
+    const posts = await PostService.getAll();
     setPosts(posts)
-    setIsPostsLoading(false);
-    }, 5000)
-  }
+  })
 
   useEffect(() => {
     fetchPosts();
@@ -65,6 +60,11 @@ function App() {
         filter={filter}
         setFilter={setFilter}
       />
+
+      {postError &&
+        <h1>Error 404 {postError}</h1>
+      }
+
       {isPostsLoading
 
       ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><Loader/></div>
