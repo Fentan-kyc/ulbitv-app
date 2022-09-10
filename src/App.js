@@ -15,6 +15,7 @@ import PostService from "./API/PostService";
 import Loader from "./Components/UI/Loader/Loader";
 import { useFetching } from "./hooks/useFething";
 import { getPageCount, getPagesArray } from "./utils/pages";
+import Pagination from "./Components/UI/pagination/Pagination";
 
 function App() {
 
@@ -31,9 +32,7 @@ function App() {
   const [page, setPages] = useState(1);
 
 
-  let pagesArray = getPagesArray(totalPages);
 
-  console.log(pagesArray);
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(async ()=>{
     const responce = await PostService.getAll(limit, page);
@@ -89,13 +88,7 @@ function App() {
 
       }
 
-      <div className="page__wrapper">
-        {pagesArray.map(p => 
-          <span key={p} onClick={() => changePage(p)} className={page === p ? 'page page__current' : 'page'}>{p}</span>
-        )}
-      </div>
-
-      
+      <Pagination page = {page} changePage = {changePage} pages = {totalPages}/>
         
     </div>
   );
