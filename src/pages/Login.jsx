@@ -18,6 +18,7 @@ const Login = () => {
         <form onSubmit={login}>
             <input type="text" placeholder='Логин' />
             <input type="text" placeholder='Пароль' />
+            <MyButton>Войти</MyButton>
         </form>
     </div>
   )
